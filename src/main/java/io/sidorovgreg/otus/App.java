@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,9 +16,7 @@ public class App {
         getTasks().forEach(task -> {
             for (int i = 0; true; i++) {
                 try {
-                    String in = Files.readAllLines(Paths.get(String.format("%s/test.%s.in", path, i))).stream()
-                            .findFirst()
-                            .orElse("");
+                    List<String> in = Files.readAllLines(Paths.get(String.format("%s/test.%s.in", path, i)));
                     String out = Files.readAllLines(Paths.get(String.format("%s/test.%s.out", path, i))).stream()
                             .findFirst()
                             .orElseThrow(() -> new RuntimeException("expected result isn't exist"));

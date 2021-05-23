@@ -1,8 +1,8 @@
 package io.sidorovgreg.otus;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface Task {
 
-    String execute(Collection<String> args);
+    String execute(List<String> args);
 }

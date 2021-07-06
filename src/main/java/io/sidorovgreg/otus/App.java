@@ -6,9 +6,13 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        int[] array = (new Random()).ints(100000000L, 0, 65535).toArray();
+        MergeSort.mergeSort(array, 0, array.length - 1);
+
         Class<?> clazz = Class.forName("io.sidorovgreg.otus.tasks." + args[0]);
         Constructor<?> ctor = clazz.getConstructor();
         Task task = (Task) ctor.newInstance();

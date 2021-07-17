@@ -1,33 +1,71 @@
 package io.sidorovgreg.otus;
 
-import java.lang.reflect.Constructor;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Objects;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class App {
-    public static void main(String[] args) throws Exception {
-        Class<?> clazz = Class.forName("io.sidorovgreg.otus.tasks." + args[0]);
-        Constructor<?> ctor = clazz.getConstructor();
-        Task task = (Task) ctor.newInstance();
-        String path = args[1];
-        for (int i = 0; true; i++) {
-            try {
-                List<String> in = Files.readAllLines(Paths.get(String.format("%s/test.%s.in", path, i)));
-                String out = Files.readAllLines(Paths.get(String.format("%s/test.%s.out", path, i))).stream()
-                        .findFirst()
-                        .orElseThrow(() -> new RuntimeException("expected result isn't exist"));
-                String result = task.execute(in);
-                if (Objects.equals(result, out)) {
-                    System.out.printf("[%s] success%n", in);
-                } else {
-                    System.out.printf("[%s] fail: got %s, expected %s %n", in, result, out);
-                }
-            } catch (NoSuchFileException e) {
-                break;
-            }
+    private static final Comparator<HuffmanNode> comparator = Comparator.comparingInt(x -> x.data);
+
+    public static void main(String[] args) {
+        int n = 6;
+        char[] charArray = {'a', 'b', 'c', 'd', 'e', 'f'};
+        int[] charfreq = {5, 9, 12, 13, 16, 45};
+
+        PriorityQueue<HuffmanNode> q
+                = new PriorityQueue<>(n, comparator);
+
+        for (int i = 0; i < n; i++) {
+            HuffmanNode hn = new HuffmanNode();
+
+            hn.c = charArray[i];
+            hn.data = charfreq[i];
+
+            hn.left = null;
+            hn.right = null;
+
+            q.add(hn);
         }
+
+        HuffmanNode root = null;
+
+        while (q.size() > 1) {
+            HuffmanNode x = q.peek();
+            q.poll();
+
+            HuffmanNode y = q.peek();
+            q.poll();
+
+            HuffmanNode f = new HuffmanNode();
+
+            f.data = x.data + y.data;
+            f.c = '-';
+
+            f.left = x;
+
+            f.right = y;
+
+            root = f;
+
+            q.add(f);
+        }
+
+        printCode(root, "");
+    }
+
+    public static void printCode(HuffmanNode root, String s) {
+
+        if (root.left
+                == null
+                && root.right
+                == null
+                && Character.isLetter(root.c)) {
+
+            System.out.println(root.c + ":" + s);
+
+            return;
+        }
+
+        printCode(root.left, s + "0");
+        printCode(root.right, s + "1");
     }
 }
